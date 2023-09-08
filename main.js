@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import './styles.css'
+import gsap from 'gsap'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 
 // Scene
@@ -41,6 +42,7 @@ scene.add(camera);
 const canvas = document.querySelector('.webgl');
 const renderer = new THREE.WebGLRenderer({ canvas });
 renderer.setSize(windowSz.width, windowSz.height);
+renderer.setPixelRatio(2)
 renderer.render(scene, camera);
 
 // Controls 
@@ -48,8 +50,10 @@ const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
 // controls.autoRotate = true;
+controls.minDistance = 0.5;
+// controls.maxDistance = 1
 
-window.addEventListener('onresize', () => {
+window.addEventListener('resize', () => {
     windowSz.width = window.innerWidth;
     windowSz.height = window.innerHeight;
     //update camera
@@ -65,3 +69,12 @@ const loop = () => {
     console.log("loop")
 }
 loop();
+
+const tl = gsap.timeline({
+    defaults: {
+        duration: 1
+    }
+})
+
+tl.fromTo(mesh.scale, { x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1 })
+tl.fromTo(nav, { x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1 })
