@@ -19,12 +19,18 @@ const windowSz = {
     height: window.innerHeight
 }
 
-
-
 // Light
-const light = new THREE.PointLight(0xffffff, 1, 100);
+const al = new THREE.AmbientLight(0xffffff, 0.1);
+scene.add(al);
+
+const light = new THREE.PointLight(0xffffff, 0.8, 100);
 light.position.set(0, 5, 10);
-scene.add(light);
+scene.add(light)
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+scene.add(directionalLight);
+
+
 
 // Camera
 const camera = new THREE.PerspectiveCamera(45, windowSz.width / windowSz.height, 0.1, 100);
@@ -37,6 +43,11 @@ const renderer = new THREE.WebGLRenderer({ canvas });
 renderer.setSize(windowSz.width, windowSz.height);
 renderer.render(scene, camera);
 
+// Controls 
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.enablePan = false;
+// controls.autoRotate = true;
 
 window.addEventListener('onresize', () => {
     windowSz.width = window.innerWidth;
@@ -45,11 +56,10 @@ window.addEventListener('onresize', () => {
     camera.aspect = windowSz.width / windowSz.height;
     camera.updateProjectionMatrix()
     renderer.setSize(windowSz.width, windowSz.height);
-
-
 })
 
 const loop = () => {
+    controls.update();
     renderer.render(scene, camera);
     window.requestAnimationFrame(loop);
     console.log("loop")
